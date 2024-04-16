@@ -2,6 +2,10 @@ import streamlit as st
 import requests
 from streamlit_lottie import st_lottie
 from PIL import Image
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+
 
 
 
@@ -23,11 +27,11 @@ def local_css(file_path):
         st.error(f"Error loading CSS file: {e}")
 
 # Call the local_css() function with the file path
-local_css('style.css')
+local_css('style/style.css')
 
 # Load Assets
 lottie = load_lottie_url('https://lottie.host/e241daf1-63cb-418d-b8a1-4070ea4986d7/OOldqGn7qv.json')
-harry = Image.open('harry.png')
+harry = Image.open('images/harry.png')
 # py = Image.open('D:\VS code\Streamlit\Website Coding is fun\images\py.png')
 
 
@@ -79,22 +83,59 @@ with st.container():
 
 
 #Contact Form
+# Function to send email
+def send_email(name, email, message):
+    sender_email = "jay.chakole@mmit.edu.in"  # Your email address
+    sender_password = "qxyd qdrc exlo aaxv"         # Your email password
+    receiver_email = "jaychakole123@gmail.com"  # Recipient email address
+
+
+    # Email configuration
+    smtp_server = "smtp.gmail.com"  # SMTP server address
+    smtp_port = 587  # SMTP port (587 for TLS)
+
+    # Create message
+    msg = MIMEMultipart()
+    msg['jay.chakole@mmit.edu.in'] = sender_email
+    msg['jaychakole123@gmail.com'] = receiver_email
+    msg['Subject'] = "New Message from Streamlit Contact Form"
+    msg.attach(MIMEText(f"Name: {name}\nEmail: {email}\nMessage: {message}", 'plain'))
+
+    # Initialize server variable
+    server = None
+
+    # Send email
+    try:
+        server = smtplib.SMTP(smtp_server, smtp_port)
+        server.starttls()
+        server.login(sender_email, sender_password)
+        server.sendmail(sender_email, receiver_email, msg.as_string())
+        st.success("Message sent successfully!")
+    except Exception as e:
+        st.error(f"Error sending message: {e}")
+    finally:
+        # Check if server is not None before calling server.quit()
+        if server is not None:
+            server.quit()
+
+# Streamlit app
 with st.container():
     st.write('---')
     st.header('Contact')
     st.write('##')
 
-    contact_form = '''<form action="https://formsubmit.co/jaychakole123@gmail.com" method="POST">
-     <input type = 'hidden' name = '_captcha' value = 'false'>
-     <input type="text" name="name" placeholder = 'Your name' required>
-     <input type="email" name="email" placeholder = 'Your email' required>
-     <textarea name = 'Message' placeholder = 'Enter your message' required></textarea> 
-     <button type="submit">Send</button>
-     </form>
-     '''
+    # Contact form
+    with st.form("contact_form"):
+        name = st.text_input("Your name", max_chars=20)
+        email = st.text_input("Your email", max_chars=30)
+        message = st.text_area("Your message", max_chars=100)
+        submit_button = st.form_submit_button("SEND")
 
-    left_column , right_column = st.columns(2)
-    with left_column:
-        st.markdown(contact_form , unsafe_allow_html= True)
-    with right_column:
-        st.empty()
+        # Handle form submission
+        if submit_button:
+            send_email(name, email, message)
+
+
+
+
+ 
