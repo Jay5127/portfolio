@@ -27,11 +27,11 @@ def local_css(file_path):
         st.error(f"Error loading CSS file: {e}")
 
 # Call the local_css() function with the file path
-local_css('style/style.css')
+local_css('style.css')
 
 # Load Assets
 lottie = load_lottie_url('https://lottie.host/e241daf1-63cb-418d-b8a1-4070ea4986d7/OOldqGn7qv.json')
-harry = Image.open('images/harry.png')
+harry = Image.open('harry.png')
 # py = Image.open('D:\VS code\Streamlit\Website Coding is fun\images\py.png')
 
 
