@@ -15,10 +15,14 @@ def load_lottie_url(url):
     return r.json()
 
 #Use local css
-def local_css(file_name):
-    with open(file_name) as f:
-        st.markdown(f'<style>{f.read()} </style>' , unsafe_allow_html= True)
+def local_css(file_path):
+    try:
+        with open(file_path) as f:
+            st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
+    except Exception as e:
+        st.error(f"Error loading CSS file: {e}")
 
+# Call the local_css() function with the file path
 local_css('style/style.css')
 
 # Load Assets
